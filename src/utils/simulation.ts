@@ -10,19 +10,20 @@ export interface SimulationResult {
   averageLoss: number;
   maxDrawdown: number;
   balanceHistory: number[];
+  tradesPerDay: number[];
+  winsPerDay: number[];
+  lossesPerDay: number[];
+  totalCashOut: number;
+  cashOutHistory: { day: number; amount: number }[];
   currentDay: number;
-}
-
-export interface SimulationState extends SimulationResult {
-  isRunning: boolean;
-  speed: number;
 }
 
 export function* simulationGenerator(
   initialBalance: number,
   riskReward: number,
   maxTradesPerDay: number,
-  days: number = 365 // Changed to 1 year
+  riskPercentage: number,
+  days: number = 365
 ): Generator<SimulationResult> {
   let balance = initialBalance;
   let successfulTrades = 0;
@@ -34,21 +35,30 @@ export function* simulationGenerator(
   let totalWins = 0;
   let totalLosses = 0;
   let balanceHistory = [initialBalance];
+  let tradesPerDay = [0];
+  let winsPerDay = [0];
+  let lossesPerDay = [0];
   let maxBalance = initialBalance;
   let maxDrawdown = 0;
+  let totalCashOut = 0;
+  let cashOutHistory: { day: number; amount: number }[] = [];
 
-  for (let day = 0; day < days; day++) {
+  for (let day = 1; day <= days; day++) {
+    // Random number of trades for the day (0 to maxTradesPerDay)
     const trades = Math.floor(Math.random() * (maxTradesPerDay + 1));
+    let dailyWins = 0;
+    let dailyLosses = 0;
     
     for (let trade = 0; trade < trades; trade++) {
-      const riskAmount = balance * 0.02;
+      const riskAmount = balance * (riskPercentage / 100);
       const rewardAmount = riskAmount * riskReward;
       
-      const isWin = Math.random() < 0.45;
+      const isWin = Math.random() < 0.45; // 45% win rate
       
       if (isWin) {
         balance += rewardAmount;
         successfulTrades++;
+        dailyWins++;
         currentWinStreak++;
         currentLossStreak = 0;
         totalWins += rewardAmount;
@@ -59,6 +69,7 @@ export function* simulationGenerator(
       } else {
         balance -= riskAmount;
         failedTrades++;
+        dailyLosses++;
         currentLossStreak++;
         currentWinStreak = 0;
         totalLosses += riskAmount;
@@ -67,8 +78,6 @@ export function* simulationGenerator(
           longestLossStreak = currentLossStreak;
         }
       }
-      
-      balanceHistory.push(balance);
       
       if (balance > maxBalance) {
         maxBalance = balance;
@@ -79,6 +88,20 @@ export function* simulationGenerator(
         maxDrawdown = currentDrawdown;
       }
     }
+
+    // Cash out 50% of profits every 30 days
+    if (day % 30 === 0 && balance > initialBalance) {
+      const profits = balance - initialBalance;
+      const cashOutAmount = profits * 0.5;
+      balance -= cashOutAmount;
+      totalCashOut += cashOutAmount;
+      cashOutHistory.push({ day, amount: cashOutAmount });
+    }
+
+    balanceHistory.push(balance);
+    tradesPerDay.push(trades);
+    winsPerDay.push(dailyWins);
+    lossesPerDay.push(dailyLosses);
 
     const totalTrades = successfulTrades + failedTrades;
     const winRate = totalTrades > 0 ? successfulTrades / totalTrades : 0;
@@ -92,12 +115,17 @@ export function* simulationGenerator(
       longestWinStreak,
       longestLossStreak,
       finalBalance: balance,
-      profitLoss: balance - initialBalance,
+      profitLoss: balance - initialBalance + totalCashOut,
       averageWin,
       averageLoss,
       maxDrawdown,
       balanceHistory,
-      currentDay: day + 1
+      tradesPerDay,
+      winsPerDay,
+      lossesPerDay,
+      totalCashOut,
+      cashOutHistory,
+      currentDay: day
     };
   }
 }

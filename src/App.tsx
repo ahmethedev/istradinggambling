@@ -5,65 +5,34 @@ import SimulationForm from './components/SimulationForm';
 import SimulationResults from './components/SimulationResults';
 import NewsletterModal from './components/NewsletterModal';
 import ShareModal from './components/ShareModal';
-import { simulationGenerator, SimulationResult } from './utils/simulation';
+import { simulationGenerator } from './utils/simulation';
 import { useTranslation } from 'react-i18next';
 import './i18n/i18n';
 
-interface SimulationFormValues {
-  balance: number;
-  riskPercentage: number;
-  riskReward: number;
-  maxTrades: number;
-}
-
 function App() {
   const { t } = useTranslation();
-  const [simulationResults, setSimulationResults] = React.useState<SimulationResult | null>(null);
+  const [simulationResults, setSimulationResults] = React.useState<any>(null);
   const [showNewsletter, setShowNewsletter] = React.useState(false);
   const [showShare, setShowShare] = React.useState(false);
   const [shareImage, setShareImage] = React.useState<string | null>(null);
   const [isRunning, setIsRunning] = React.useState(false);
   const [speed, setSpeed] = React.useState(5);
-  
-  const simulatorRef = React.useRef<Generator<SimulationResult, void, unknown> | null>(null);
-  const animationFrameRef = React.useRef<number | null>(null);
+  const simulatorRef = React.useRef<any>(null);
+  const animationFrameRef = React.useRef<any>(null);
 
-  const runSimulation = React.useCallback(() => {
-    if (!simulatorRef.current) return;
-
-    try {
-      const { value, done } = simulatorRef.current.next();
-      
-      if (!done) {
-        setSimulationResults(value);
-        // Ensure next frame is scheduled
-        animationFrameRef.current = window.setTimeout(
-          runSimulation,
-          1000 / speed
-        );
-      } else {
-        setIsRunning(false);
-      }
-    } catch (error) {
-      console.error('Simulation error:', error);
-      setIsRunning(false);
-    }
-  }, [speed]);
-
-  const handleSimulation = (values: SimulationFormValues) => {
+  const handleSimulation = (values: {
+    balance: number;
+    riskPercentage: number;
+    riskReward: number;
+    maxTrades: number;
+  }) => {
     if (isRunning) return;
 
-    // Clear any existing timeouts
-    if (animationFrameRef.current !== null) {
-      clearTimeout(animationFrameRef.current);
-    }
-
-    // Initialize new simulation
     simulatorRef.current = simulationGenerator(
       values.balance,
       values.riskReward,
       values.maxTrades,
-      365 // Explicitly set to 365 days
+      values.riskPercentage
     );
     
     setIsRunning(true);
@@ -75,11 +44,26 @@ function App() {
     }
   };
 
+  const runSimulation = () => {
+    if (!simulatorRef.current) return;
+
+    const { value, done } = simulatorRef.current.next();
+    
+    if (!done) {
+      setSimulationResults(value);
+      animationFrameRef.current = setTimeout(
+        runSimulation,
+        1000 / speed
+      );
+    } else {
+      setIsRunning(false);
+    }
+  };
+
   const handlePauseToggle = () => {
-    if (isRunning && animationFrameRef.current !== null) {
+    if (isRunning) {
       clearTimeout(animationFrameRef.current);
-      animationFrameRef.current = null;
-    } else if (!isRunning && simulatorRef.current) {
+    } else {
       runSimulation();
     }
     setIsRunning(!isRunning);
@@ -87,9 +71,9 @@ function App() {
 
   const handleSpeedChange = (newSpeed: number) => {
     setSpeed(newSpeed);
-    if (isRunning && animationFrameRef.current !== null) {
+    if (isRunning) {
       clearTimeout(animationFrameRef.current);
-      animationFrameRef.current = window.setTimeout(runSimulation, 1000 / newSpeed);
+      animationFrameRef.current = setTimeout(runSimulation, 1000 / newSpeed);
     }
   };
 
@@ -98,10 +82,9 @@ function App() {
     setShowShare(true);
   };
 
-  // Cleanup effect
   React.useEffect(() => {
     return () => {
-      if (animationFrameRef.current !== null) {
+      if (animationFrameRef.current) {
         clearTimeout(animationFrameRef.current);
       }
     };

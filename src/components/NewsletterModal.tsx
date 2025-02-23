@@ -12,13 +12,10 @@ interface NewsletterModalProps {
 export default function NewsletterModal({ isOpen, onClose }: NewsletterModalProps) {
   const { t } = useTranslation();
   const [email, setEmail] = React.useState('');
-  const [showModal, setShowModal] = React.useState(isOpen);
 
-  // This function handles the email submission without blocking the simulation
-  const handleEmailSubmit = async (event: React.FormEvent) => {
-    // Prevent default form submission behavior
-    event.preventDefault();
-    // Here you would typically send the email to your backend asynchronously
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Here you would typically send the email to your backend
     console.log('Newsletter signup:', email);
     toast.success(t('newsletter.success'));
     onClose();
@@ -26,8 +23,8 @@ export default function NewsletterModal({ isOpen, onClose }: NewsletterModalProp
 
   return (
     <Dialog
-      open={showModal}
-      onClose={() => setShowModal(false)}
+      open={isOpen}
+      onClose={onClose}
       className="fixed z-10 inset-0 overflow-y-auto"
     >
       <div className="flex items-center justify-center min-h-screen px-4">
@@ -49,7 +46,7 @@ export default function NewsletterModal({ isOpen, onClose }: NewsletterModalProp
             {t('newsletter.description')}
           </p>
 
-          <form onSubmit={handleEmailSubmit} className="mt-4">
+          <form onSubmit={handleSubmit} className="mt-4">
             <input
               type="email"
               value={email}

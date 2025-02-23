@@ -15,6 +15,10 @@ export const resources = {
         title: "Simulation Results"
       },
       metrics: {
+        balance: "Balance",
+        trades: "Trades",
+        wins: "Wins",
+        losses: "Losses",
         successfulTrades: "Successful Trades",
         failedTrades: "Failed Trades",
         winRate: "Win Rate",
@@ -24,7 +28,10 @@ export const resources = {
         profitLoss: "Total Profit/Loss",
         averageWin: "Average Win",
         averageLoss: "Average Loss",
-        maxDrawdown: "Maximum Drawdown"
+        maxDrawdown: "Maximum Drawdown",
+        totalCashOut: "Total Cash Out",
+        cashOutHistory: "Cash Out History",
+        cashOutDay: "Day {{day}}"
       },
       share: {
         button: "Share Results",
@@ -66,6 +73,10 @@ export const resources = {
         title: "Simülasyon Sonuçları"
       },
       metrics: {
+        balance: "Bakiye",
+        trades: "İşlemler",
+        wins: "Kazançlar",
+        losses: "Kayıplar",
         successfulTrades: "Başarılı İşlemler",
         failedTrades: "Başarısız İşlemler",
         winRate: "Kazanç Oranı",
@@ -75,7 +86,10 @@ export const resources = {
         profitLoss: "Toplam Kar/Zarar",
         averageWin: "Ortalama Kazanç",
         averageLoss: "Ortalama Kayıp",
-        maxDrawdown: "Maksimum Düşüş"
+        maxDrawdown: "Maksimum Düşüş",
+        totalCashOut: "Toplam Kar Realizasyonu",
+        cashOutHistory: "Kar Realizasyon Geçmişi",
+        cashOutDay: "Gün {{day}}"
       },
       share: {
         button: "Sonuçları Paylaş",
