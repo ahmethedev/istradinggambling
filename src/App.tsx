@@ -96,6 +96,8 @@ function App() {
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">{t('title')}</h1>
           <p className="text-xl text-gray-600">{t('subtitle')}</p>
+          <p className="text-sm text-gray-600">{t('fxDisclaimer')}</p>
+
         </div>
 
         <div className="grid gap-8 lg:grid-cols-[400px,1fr]">
