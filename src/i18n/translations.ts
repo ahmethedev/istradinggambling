@@ -98,7 +98,7 @@ export const resources = {
         shareTwitter: "Twitter'da Paylaş",
         linkCopied: "Bağlantı panoya kopyalandı!",
         copyError: "Bağlantı kopyalanamadı",
-        twitterText: "istradinggamble.com'daki trading simülasyon sonuçlarıma göz atın! 📈"
+        twitterText: "istradinggambling.com'daki trading simülasyon sonuçlarıma göz atın! 📈"
       },
       newsletter: {
         title: "Trading Bültenimize Katılın",

@@ -343,7 +343,7 @@ export default function SimulationResults({ metrics, onShare }: SimulationResult
 
       <div className="mt-4 text-center">
         <p className="text-sm text-gray-500">
-          istradinggamble.com
+          istradinggambling.com
         </p>
       </div>
     </div>
