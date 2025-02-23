@@ -3,6 +3,7 @@ export const resources = {
     translation: {
       title: "Is Trading Gambling?",
       subtitle: "Discover how disciplined trading differs from gambling",
+      fxDisclaimer: "Warning: Forex trading carries a high level of risk and may not be suitable for all investors. The leverage created by trading on margin can work against you as well as for you. Before entering any forex transaction, you should carefully consider your investment objectives, level of experience, and risk appetite.",
       balance: "Initial Balance",
       riskPercentage: "Risk Percentage per Trade",
       riskAmount: "Risk Amount",
@@ -61,6 +62,7 @@ export const resources = {
     translation: {
       title: "Trading Kumar mıdır?",
       subtitle: "Disiplinli trading'in kumardan nasıl farklı olduğunu keşfedin",
+      fxDisclaimer: "Uyarı: Forex işlemleri yüksek risk taşır ve tüm yatırımcılar için uygun olmayabilir. Kaldıraçlı işlemler hem lehinize hem de aleyhinize çalışabilir. Herhangi bir forex işlemine girmeden önce, yatırım hedeflerinizi, deneyim seviyenizi ve risk iştahınızı dikkatle değerlendirmelisiniz.",
       balance: "Başlangıç Bakiyesi",
       riskPercentage: "İşlem Başına Risk Yüzdesi",
       riskAmount: "Risk Miktarı",
